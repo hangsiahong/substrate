@@ -229,10 +229,12 @@ where
 		debug!(
 			target: LOG_TARGET,
 			"Handling block request from {}: Starting at `{:?}` with maximum blocks \
-			 of `{}`, direction `{:?}` and attributes `{:?}`.",
+			 of `{}`, reputation_change: `{:?}`, small_request: `{:?}`, direction `{:?}` and attributes `{:?}`.",
 			peer,
 			from_block_id,
 			max_blocks,
+			reputation_change,
+			small_request,
 			direction,
 			attributes,
 		);
@@ -268,6 +270,14 @@ where
 		} else {
 			Err(())
 		};
+
+		debug!(
+			target: LOG_TARGET,
+			"Sending result of block request from {}: Starting at `{:?}`, result: {:?}",
+			peer,
+			from_block_id,
+			result.as_ref().map(|data| data.len())
+		);
 
 		pending_response
 			.send(OutgoingResponse {
